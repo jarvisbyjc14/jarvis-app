@@ -6,11 +6,16 @@ const todayKey = () => new Date().toISOString().split('T')[0];
 
 function loadState() {
   const saved = localStorage.getItem('jarvis_state_' + todayKey());
-  if (saved) return JSON.parse(saved);
+  const expenses = JSON.parse(localStorage.getItem('jarvis_expenses') || '[]');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    parsed.expenses = expenses;
+    return parsed;
+  }
   return {
     tasks: DAILY_TASKS_TEMPLATE.map(t => ({...t, done: false})),
     waterGlasses: 0,
-    expenses: JSON.parse(localStorage.getItem('jarvis_expenses') || '[]'),
+    expenses: expenses,
     chatHistory: []
   };
 }
